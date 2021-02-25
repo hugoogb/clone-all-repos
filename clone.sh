@@ -45,22 +45,25 @@ program_exists() {
 }
 
 ACTUAL_DIR=`pwd`
+PROJECTS_FOLDER=$HOME/projects
+REPOS_LISTS=$PROJECTS_FOLDER/clone-all-repos/repos
 
 projects_folder() {
-    PROJECTS_FOLDER=$HOME/projects
     if [ ! -d $PROJECTS_FOLDER ]; then
         mkdir $PROJECTS_FOLDER
     fi
 }
 
 clone_repos_home() {
-    file=$HOME/clone-all-repos/repos_home.txt
+    file=$REPOS_LISTS/repos_home.txt
     lines=`wc -l < $file`
     i=1
     
     while [ $i -le $lines ]
     do
         repo=`head -$i $file | tail -1`
+
+        ok "OK: cloning $repo repo..."
 
         if [ ! -d $HOME/$repo ]; then
             if program_exists "ssh"; then
@@ -69,8 +72,8 @@ clone_repos_home() {
                 git clone https://github.com/hugoogb/$repo.git $HOME/$repo
             fi
         else 
-            warn "WARNING: repo already cloned"
-            info "INFO: updating repo..."
+            warn "WARNING: $repo already cloned"
+            info "INFO: updating $repo repo..."
 
             cd $HOME/$repo
             git pull origin master
@@ -82,13 +85,15 @@ clone_repos_home() {
 }
 
 clone_repos_projects_folder() {
-    file=$HOME/clone-all-repos/repos_projects.txt
+    file=$REPOS_LISTS/repos_projects.txt
     lines=`wc -l < $file`
     i=1
 
     while [ $i -le $lines ]
     do
         repo=`head -$i $file | tail -1`
+
+        ok "OK: cloning $repo repo..."
 
         if [ ! -d $PROJECTS_FOLDER/$repo ]; then
             if program_exists "ssh"; then
@@ -97,8 +102,8 @@ clone_repos_projects_folder() {
                 git clone https://github.com/hugoogb/$repo.git $PROJECTS_FOLDER/$repo
             fi
         else 
-            warn "WARNING: repo already cloned"
-            info "INFO: updating repo..."
+            warn "WARNING: $repo already cloned"
+            info "INFO: updating $repo repo..."
 
             cd $PROJECTS_FOLDER/$repo
             git pull origin master
