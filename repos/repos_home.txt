@@ -1,0 +1,4 @@
+projectAutoInit
+dotfiles
+arch-install
+software-engineering
